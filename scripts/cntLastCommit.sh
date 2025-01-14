@@ -1,1 +1,0 @@
-git ls-files | xargs -n 1 git blame --line-porcelain | awk '/^author / {authors[$2]++} END {for (a in authors) print authors[a], a}' | sort -nr
