@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"hrbac/global"
 
 	nebula "github.com/vesoft-inc/nebula-go/v3"
 )
@@ -25,36 +25,10 @@ const BasicSchema = `
 	INSERT EDGE has_permission(type) VALUES "role_1"->"device_1":("write");
 	INSERT EDGE has_permission(type) VALUES "role_1"->"device_2":("write");
 	INSERT EDGE leader_of() VALUES "role_1"->"role_2":();
-
-	MATCH (v)-[belongs_to]->(:role)-[leader_of*0..]->(:role)-[has_permission]->(d:device) WHERE id(v) == 'user_1' RETURN d;
-
 `
 
-func CheckPermission(userID, permissionType, deviceID string) (ok bool, err error) {
-	schema := fmt.Sprintf(
-		`MATCH (v)-[belongs_to]->(:role)-[leader_of*0..]->(:role)`+
-			`-[has_permission{type:'%s'}]->(d:device) WHERE id(v) == '%s' AND id(d) == '%s' RETURN d;`,
-		permissionType, userID, deviceID,
-	)
-
-	resp, err := SessionPool.Execute(schema)
-	if err != nil {
-		return false, fmt.Errorf("query execution failed: %v", err)
-	}
-
-	if !resp.IsSucceed() {
-		return false, fmt.Errorf("query failed: %s", resp.GetErrorMsg())
-	}
-
-	if resp.GetRowSize() > 0 {
-		return true, nil
-	}
-
-	return false, nil
-}
-
 func Exec(schema string) (res *nebula.ResultSet, err error) {
-	res, err = SessionPool.Execute(schema)
+	res, err = global.SessionPool.Execute(schema)
 	CheckResultSet(schema, res)
 	return
 }

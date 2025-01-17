@@ -1,14 +1,14 @@
-package main
+package global
 
 import nebula "github.com/vesoft-inc/nebula-go/v3"
 
 const (
 	SPACE    = "my_space"
-	address  = "127.0.0.1"
-	port     = 9669
-	username = "root"
-	password = "nebula"
-	useHTTP2 = false
+	Address  = "127.0.0.1"
+	Port     = 9669
+	Username = "root"
+	Password = "nebula"
+	UseHTTP2 = false
 )
 
 var SessionPool *nebula.SessionPool

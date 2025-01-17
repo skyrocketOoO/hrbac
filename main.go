@@ -6,6 +6,8 @@ import (
 	"strings"
 	"sync"
 
+	"hrbac/global"
+
 	nebula "github.com/vesoft-inc/nebula-go/v3"
 )
 
@@ -18,7 +20,7 @@ type Person struct {
 func main() {
 	prepareSpace()
 	NewSessionPool()
-	defer SessionPool.Close()
+	defer global.SessionPool.Close()
 
 	// execute query
 	{
@@ -30,7 +32,7 @@ func main() {
 			"'John':('John', 11);"
 
 		// Insert multiple vertexes
-		resultSet, err := SessionPool.Execute(insertVertexes)
+		resultSet, err := global.SessionPool.Execute(insertVertexes)
 		if err != nil {
 			fmt.Print(err.Error())
 			return
@@ -46,7 +48,7 @@ func main() {
 			"'Tom'->'Jerry':(68.3), " +
 			"'Bob'->'John':(97.2);"
 
-		resultSet, err := SessionPool.Execute(insertEdges)
+		resultSet, err := global.SessionPool.Execute(insertEdges)
 		if err != nil {
 			fmt.Print(err.Error())
 			return
@@ -64,7 +66,7 @@ func main() {
 		go func(wg *sync.WaitGroup) {
 			defer wg.Done()
 
-			resultSet, err = SessionPool.Execute(query)
+			resultSet, err = global.SessionPool.Execute(query)
 			if err != nil {
 				fmt.Print(err.Error())
 				return
@@ -109,9 +111,9 @@ func main() {
 	}
 	// Drop space
 	{
-		query := fmt.Sprintf(`DROP SPACE IF EXISTS %s`, SPACE)
+		query := fmt.Sprintf(`DROP SPACE IF EXISTS %s`, global.SPACE)
 		// Send query
-		resultSet, err := SessionPool.Execute(query)
+		resultSet, err := global.SessionPool.Execute(query)
 		if err != nil {
 			fmt.Print(err.Error())
 			return
