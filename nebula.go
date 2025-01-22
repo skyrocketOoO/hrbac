@@ -88,7 +88,6 @@ func prepareSpace() {
 		checkResultSet(createSchema, resultSet)
 	}
 
-	time.Sleep(5 * time.Second)
-
 	log.Println("Space example_space was created")
+	time.Sleep(5 * time.Second)
 }
