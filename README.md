@@ -1,4 +1,4 @@
 # hrbac
-Comparison different implementation of rbac
+hrbac implement using nebula graph db
 
 
